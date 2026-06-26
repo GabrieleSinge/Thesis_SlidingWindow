@@ -1,7 +1,9 @@
 import argparse
 from pathlib import Path
 from datetime import datetime
+import json
 
+from sliding_window_tsc.utils import load_hyperparameters_from_json
 from sliding_window_tsc.experiment import run_experiment
 
 
@@ -67,10 +69,29 @@ def main():
         help="Random seed.",
     )
 
+    parser.add_argument(
+        "--hyperparameters-file",
+        type=str,
+        default=None,
+        help="Path to a JSON file containing classifier hyperparameters.",
+    )
+
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.hyperparameters is not None and args.hyperparameters_file is not None:
+        raise ValueError(
+            "Use either --hyperparameters or --hyperparameters-file, not both."
+        )
+
+    if args.hyperparameters_file is not None:
+        hyperparameters = load_hyperparameters_from_json(args.hyperparameters_file)
+    elif args.hyperparameters is not None:
+        hyperparameters = json.loads(args.hyperparameters)
+    else:
+        hyperparameters = {}
 
     results_df = run_experiment(
         dataset_folder=args.dataset_folder,
@@ -80,6 +101,7 @@ def main():
         stride_ratios=args.stride_ratios,
         percentages=args.percentages,
         random_state=args.random_state,
+        hyperparameters=hyperparameters,
     )
 
     dataset_name = Path(args.dataset_folder).name
