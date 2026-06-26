@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from windowing import make_window_dataset
+from sliding_window_tsc.windowing import make_window_dataset
 
 
 def test_make_window_dataset_single_series():
