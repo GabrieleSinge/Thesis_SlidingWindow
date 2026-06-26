@@ -1,0 +1,30 @@
+[project]
+name = "thesis-sliding-window"
+version = "0.1.0"
+description = "Framework for sliding window analysis in time-series classification"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+
+dependencies = [
+    "aeon",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+    "pyyaml",
+    "tqdm"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "ipykernel",
+    "jupyter"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

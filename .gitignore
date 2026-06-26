@@ -1,1 +1,26 @@
+# macOS
 .DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Results
+results/*
+!results/.gitkeep
+
+# Plots
+plots/*
+!plots/.gitkeep
