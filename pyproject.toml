@@ -12,7 +12,8 @@ dependencies = [
     "scikit-learn",
     "matplotlib",
     "pyyaml",
-    "tqdm"
+    "tqdm",
+    "optuna"
 ]
 
 [project.optional-dependencies]
