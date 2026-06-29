@@ -10,9 +10,10 @@ def suggest_hyperparameters(trial, classifier_name: str):
     """Define Optuna search spaces for supported classifiers."""
     if classifier_name == "MiniRocketClassifier":
         return {
-            "num_kernels": trial.suggest_categorical(
-                "num_kernels", [1000, 5000, 10000]
-            )
+            "n_kernels": trial.suggest_int("n_kernels", 1000, 2500, step=100),
+            "max_dilations_per_kernel": trial.suggest_categorical(
+                "max_dilations_per_kernel", [16, 32]
+            ),
         }
 
     if classifier_name == "KNeighborsTimeSeriesClassifier":
@@ -50,7 +51,7 @@ def objective(
     dataset_folder: str,
     classifier_name: str,
     window_sizes,
-    stride_ratio: float,
+    stride_ratios,
     percentages: bool,
     random_state: int,
     metric: str,
@@ -62,7 +63,7 @@ def objective(
         dataset_folder=dataset_folder,
         classifier_name=classifier_name,
         window_sizes=window_sizes,
-        stride_ratio=stride_ratio,
+        stride_ratios=stride_ratios,
         percentages=percentages,
         random_state=random_state,
         hyperparameters=hyperparameters,
@@ -89,7 +90,7 @@ def tune_classifier(
     dataset_folder: str,
     classifier_name: str,
     window_sizes,
-    stride_ratio: float = 0.5,
+    stride_ratios = None,
     percentages: bool = False,
     random_state: int = 42,
     metric: str = "series_macro_f1",
@@ -97,6 +98,9 @@ def tune_classifier(
     output_dir: str = "results/tuning",
 ):
     """Run Optuna hyperparameter search for one classifier on one dataset."""
+    if stride_ratios is None:
+        stride_ratios = [0.5]
+
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
@@ -107,7 +111,7 @@ def tune_classifier(
             dataset_folder=dataset_folder,
             classifier_name=classifier_name,
             window_sizes=window_sizes,
-            stride_ratio=stride_ratio,
+            stride_ratios=stride_ratios,
             percentages=percentages,
             random_state=random_state,
             metric=metric,

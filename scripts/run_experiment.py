@@ -81,17 +81,7 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    if args.hyperparameters is not None and args.hyperparameters_file is not None:
-        raise ValueError(
-            "Use either --hyperparameters or --hyperparameters-file, not both."
-        )
-
-    if args.hyperparameters_file is not None:
-        hyperparameters = load_hyperparameters_from_json(args.hyperparameters_file)
-    elif args.hyperparameters is not None:
-        hyperparameters = json.loads(args.hyperparameters)
-    else:
-        hyperparameters = {}
+    hyperparameters = load_hyperparameters_from_json(args.hyperparameters_file)
 
     results_df = run_experiment(
         dataset_folder=args.dataset_folder,

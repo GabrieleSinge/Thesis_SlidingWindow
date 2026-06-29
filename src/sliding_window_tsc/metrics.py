@@ -5,7 +5,10 @@ from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
 
 
 def compute_classification_metrics(y_true, y_pred, prefix: str = ""):
-    """Compute accuracy, balanced accuracy, and macro F1."""
+    """
+    Compute accuracy, balanced accuracy, and macro F1.
+    Add here for any other metrics you want to compute for your classification task.
+    """
     names = {
         "accuracy": accuracy_score(y_true, y_pred),
         "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),

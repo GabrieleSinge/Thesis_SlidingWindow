@@ -37,10 +37,11 @@ def main():
     )
 
     parser.add_argument(
-        "--stride-ratio",
+        "--stride-ratios",
         type=float,
-        default=0.5,
-        help="Stride ratio with respect to window size.",
+        nargs="+",
+        default=[0.5],
+        help="List of stride ratios to evaluate for each window size.",
     )
 
     parser.add_argument(
@@ -77,7 +78,7 @@ def main():
         dataset_folder=args.dataset_folder,
         classifier_name=args.classifier,
         window_sizes=args.window_sizes,
-        stride_ratio=args.stride_ratio,
+        stride_ratios=args.stride_ratios,
         percentages=args.percentages,
         random_state=args.random_state,
         metric=args.metric,
