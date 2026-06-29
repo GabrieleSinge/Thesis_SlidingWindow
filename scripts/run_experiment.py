@@ -6,6 +6,8 @@ import json
 from sliding_window_tsc.utils import load_hyperparameters_from_json
 from sliding_window_tsc.experiment import run_experiment
 
+from sliding_window_tsc.utils import expand_range
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -29,10 +31,15 @@ def main():
     parser.add_argument(
         "--window-sizes",
         type=float,
-        nargs="+",
+        nargs=3,
         required=True,
-        help="List of window sizes. Absolute values by default, percentages if --percentages is used.",
-    )
+        metavar=("START", "END", "STEP"),
+        help=(
+            "Window size range as START END STEP. "
+            "Absolute values by default, percentages if --percentages is used. "
+            "Example: --window-sizes 0.01 0.50 0.01"
+    ),
+)
 
     parser.add_argument(
         "--percentages",
@@ -78,6 +85,12 @@ def main():
 
     args = parser.parse_args()
 
+    window_sizes = expand_range(
+        start=args.window_sizes[0],
+        end=args.window_sizes[1],
+        step=args.window_sizes[2],
+    )
+
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -86,7 +99,7 @@ def main():
     results_df = run_experiment(
         dataset_folder=args.dataset_folder,
         classifier_name=args.classifier,
-        window_sizes=args.window_sizes,
+        window_sizes=window_sizes,
         stride_ratio=args.stride_ratio,
         stride_ratios=args.stride_ratios,
         percentages=args.percentages,

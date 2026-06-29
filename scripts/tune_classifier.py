@@ -1,7 +1,7 @@
 import argparse
 
 from sliding_window_tsc.tuning import tune_classifier
-
+from sliding_window_tsc.utils import expand_range
 
 def main():
     parser = argparse.ArgumentParser(
@@ -25,10 +25,15 @@ def main():
     parser.add_argument(
         "--window-sizes",
         type=float,
-        nargs="+",
+        nargs=3,
         required=True,
-        help="Window sizes or percentages.",
-    )
+        metavar=("START", "END", "STEP"),
+        help=(
+            "Window size range as START END STEP. "
+            "Absolute values by default, percentages if --percentages is used. "
+            "Example: --window-sizes 0.01 0.50 0.01"
+    ),
+)
 
     parser.add_argument(
         "--percentages",
@@ -74,10 +79,16 @@ def main():
 
     args = parser.parse_args()
 
+    window_sizes = expand_range(
+        start=args.window_sizes[0],
+        end=args.window_sizes[1],
+        step=args.window_sizes[2],
+    )
+
     study = tune_classifier(
         dataset_folder=args.dataset_folder,
         classifier_name=args.classifier,
-        window_sizes=args.window_sizes,
+        window_sizes=window_sizes,
         stride_ratios=args.stride_ratios,
         percentages=args.percentages,
         random_state=args.random_state,

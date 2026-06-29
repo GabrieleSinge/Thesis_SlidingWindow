@@ -2,6 +2,26 @@ import json
 from pathlib import Path
 
 
+def expand_range(start: float, end: float, step: float) -> list[float]:
+    """
+    Expand START END STEP into an inclusive range.
+    """
+
+    if step <= 0:
+        raise ValueError("STEP must be greater than 0.")
+
+    if end < start:
+        raise ValueError("END must be greater than or equal to START.")
+
+    values = []
+    current = start
+
+    while current <= end + 1e-12:
+        values.append(round(current, 10))
+        current += step
+
+    return values
+
 def load_hyperparameters_from_json(path: str | None) -> dict:
     """
     Load classifier hyperparameters from a JSON file.
