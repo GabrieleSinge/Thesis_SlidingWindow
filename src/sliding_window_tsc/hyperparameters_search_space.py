@@ -7,13 +7,13 @@ def suggest_hyperparameters(trial, classifier_name: str) -> dict:
         return {
             "n_kernels": trial.suggest_int(
                 "n_kernels",
-                1000,
-                2500,
-                step=100,
+                500,
+                3000,
+                step=50,
             ),
             "max_dilations_per_kernel": trial.suggest_categorical(
                 "max_dilations_per_kernel",
-                [16, 32],
+                [16, 32, 64],
             ),
         }
 

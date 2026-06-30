@@ -8,22 +8,8 @@ import pandas as pd
 from sliding_window_tsc.data_loader import load_dataset
 from sliding_window_tsc.experiment import run_experiment
 from sliding_window_tsc.windowing import parse_window_sizes
-
-from sliding_window_tsc.utils import *
-
-
-
-# ---------------------------------------------------------------------
-# Search spaces
-# ---------------------------------------------------------------------
-
-
+from sliding_window_tsc.utils import _clean_error, _score_from_result_row, _save_json, _best_hyperparameters_filename, _prepare_output_paths
 from sliding_window_tsc.hyperparameters_search_space import suggest_hyperparameters
-
-
-# ---------------------------------------------------------------------
-# Data structures
-# ---------------------------------------------------------------------
 
 
 @dataclass(frozen=True)

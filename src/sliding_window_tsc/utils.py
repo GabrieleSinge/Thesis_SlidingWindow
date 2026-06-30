@@ -1,7 +1,37 @@
 import json
 from pathlib import Path
 import pandas as pd
+from dataclasses import dataclass
 
+
+@dataclass(frozen=True)
+class WindowStrideConfig:
+    """
+    One experimental configuration.
+
+    A configuration is uniquely identified by:
+        dataset + classifier + window_size + stride_ratio
+    """
+
+    dataset_name: str
+    classifier_name: str
+    window_size: int
+    window_percentage: float
+    stride_ratio: float
+    stride: int
+
+
+@dataclass(frozen=True)
+class TuningOutputPaths:
+    """
+    Output folders used by the tuning process.
+    """
+
+    root: Path
+    best_hyperparameters_dir: Path
+    trials_dir: Path
+    trial_results_dir: Path
+    index_file: Path
 
 def expand_range(start: float, end: float, step: float) -> list[float]:
     """
