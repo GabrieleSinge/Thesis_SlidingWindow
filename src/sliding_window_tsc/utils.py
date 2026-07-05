@@ -200,13 +200,13 @@ def _score_from_result_row(row: pd.Series, metric: str) -> float:
     return float(value)
 
 IDEAL_CLASSIFIERS = [
-    "MiniRocketClassifier",
+    "MiniRocketClassifier", #Convolutional-based classifier
     "KNeighborsTimeSeriesClassifier",
-    "WEASEL",
-    "Catch22Classifier",
-    "DrCIFClassifier",
-    "RDSTClassifier",
-    "InceptionTimeClassifier",
+    "WEASEL", #Dictionary-based classifier
+    "Catch22Classifier", #Feature-based classifier
+    "DrCIFClassifier", #Interval-based classifier
+    "RDSTClassifier", #Shapelet-based classifier
+    "InceptionTimeClassifier", #Deep learning-based classifier
 ]
 
 FAST_TRAINING_CLASSIFIERS = [

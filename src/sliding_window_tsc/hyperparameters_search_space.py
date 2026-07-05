@@ -19,11 +19,19 @@ def suggest_hyperparameters(trial, classifier_name: str) -> dict:
 
     if classifier_name == "KNeighborsTimeSeriesClassifier":
         return {
-            "n_neighbors": trial.suggest_int("n_neighbors", 1, 7),
+            "n_neighbors": trial.suggest_categorical(
+                "n_neighbors",
+                [1, 3, 5, 7, 9],
+            ),
+            "weights": trial.suggest_categorical(
+                "weights",
+                ["uniform", "distance"],
+            ),
             "distance": trial.suggest_categorical(
                 "distance",
-                ["euclidean", "dtw"],
+                ["euclidean", "dtw", "ddtw"],
             ),
+            "n_jobs": -1,
         }
 
     if classifier_name == "TimeSeriesForestClassifier":
