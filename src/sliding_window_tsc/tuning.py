@@ -232,6 +232,38 @@ def _build_index_row(
     }
 
 
+def _build_index_row_from_saved_best(
+    config: WindowStrideConfig,
+    best_result: dict,
+    metric: str,
+    best_file: Path,
+    trials_file: Path,
+) -> dict:
+    """
+    Rebuild one index row from an already saved best-hyperparameter JSON.
+    """
+
+    return {
+        "dataset": best_result.get("dataset", config.dataset_name),
+        "classifier": best_result.get("classifier", config.classifier_name),
+        "window_size": best_result.get("window_size", config.window_size),
+        "window_percentage": best_result.get(
+            "window_percentage",
+            config.window_percentage,
+        ),
+        "stride_ratio": best_result.get("stride_ratio", config.stride_ratio),
+        "stride": best_result.get("stride", config.stride),
+        "metric": best_result.get("metric", metric),
+        "best_value": best_result.get("best_value"),
+        "best_params": json.dumps(best_result.get("best_params", {}), sort_keys=True),
+        "best_trial": best_result.get("best_trial"),
+        "best_status": best_result.get("best_status"),
+        "best_error": best_result.get("best_error"),
+        "best_file": str(best_file),
+        "trials_file": str(trials_file),
+    }
+
+
 def tune_classifier_per_configuration(
     dataset_folder: str | Path,
     classifier_name: str,
@@ -280,6 +312,35 @@ def tune_classifier_per_configuration(
             f"stride_ratio={config.stride_ratio}"
         )
 
+        base_filename = _best_hyperparameters_filename(config)
+
+        best_file = output_paths.best_hyperparameters_dir / base_filename
+        trials_file = output_paths.trials_dir / base_filename.replace(
+            ".json",
+            "_trials.csv",
+        )
+
+        if best_file.exists() and trials_file.exists():
+            print("Existing completed configuration found. Skipping.")
+
+            with best_file.open("r", encoding="utf-8") as f:
+                best_result = json.load(f)
+
+            index_row = _build_index_row_from_saved_best(
+                config=config,
+                best_result=best_result,
+                metric=metric,
+                best_file=best_file,
+                trials_file=trials_file,
+            )
+
+            index_rows.append(index_row)
+
+            index_df = pd.DataFrame(index_rows)
+            index_df.to_csv(output_paths.index_file, index=False)
+
+            continue
+
         study = optuna.create_study(direction="maximize")
 
         study.optimize(
@@ -291,14 +352,6 @@ def tune_classifier_per_configuration(
                 random_state=random_state,
             ),
             n_trials=n_trials,
-        )
-
-        base_filename = _best_hyperparameters_filename(config)
-
-        best_file = output_paths.best_hyperparameters_dir / base_filename
-        trials_file = output_paths.trials_dir / base_filename.replace(
-            ".json",
-            "_trials.csv",
         )
 
         trials_df = study.trials_dataframe()
