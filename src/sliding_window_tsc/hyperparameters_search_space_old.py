@@ -17,67 +17,6 @@ def suggest_hyperparameters(trial, classifier_name: str) -> dict:
             ),
         }
 
-    if classifier_name == "HydraClassifier":
-        return {
-            "n_kernels": trial.suggest_categorical(
-                "n_kernels",
-                [4, 8, 16],
-            ),
-            "n_groups": trial.suggest_categorical(
-                "n_groups",
-                [16, 32, 64],
-            ),
-            "class_weight": trial.suggest_categorical(
-                "class_weight",
-                [None, "balanced"],
-            ),
-            "n_jobs": 4,
-            "random_state": 42,
-        }
-
-    if classifier_name == "QUANTClassifier":
-        return {
-            "interval_depth": trial.suggest_categorical(
-                "interval_depth",
-                [3, 4, 5, 6],
-            ),
-            "quantile_divisor": trial.suggest_categorical(
-                "quantile_divisor",
-                [2, 4, 8],
-            ),
-            "class_weight": trial.suggest_categorical(
-                "class_weight",
-                [None, "balanced"],
-            ),
-            "random_state": 42,
-        }
-
-    if classifier_name == "RDSTClassifier":
-        return {
-            "max_shapelets": trial.suggest_categorical(
-                "max_shapelets",
-                [250, 500, 1000, 2000],
-            ),
-            "proba_normalization": trial.suggest_categorical(
-                "proba_normalization",
-                [0.5, 0.8, 1.0],
-            ),
-            "alpha_similarity": trial.suggest_categorical(
-                "alpha_similarity",
-                [0.3, 0.5, 0.8],
-            ),
-            "use_prime_dilations": trial.suggest_categorical(
-                "use_prime_dilations",
-                [False, True],
-            ),
-            "class_weight": trial.suggest_categorical(
-                "class_weight",
-                [None, "balanced"],
-            ),
-            "n_jobs": 4,
-            "random_state": 42,
-        }
-
     if classifier_name == "KNeighborsTimeSeriesClassifier":
         return {
             "n_neighbors": trial.suggest_categorical(
@@ -93,6 +32,16 @@ def suggest_hyperparameters(trial, classifier_name: str) -> dict:
                 ["euclidean", "dtw", "ddtw"],
             ),
             "n_jobs": -1,
+        }
+
+    if classifier_name == "TimeSeriesForestClassifier":
+        return {
+            "n_estimators": trial.suggest_int(
+                "n_estimators",
+                50,
+                300,
+                step=50,
+            ),
         }
 
     if classifier_name == "RandomIntervalClassifier":

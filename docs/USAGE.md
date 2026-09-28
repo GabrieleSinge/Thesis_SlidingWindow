@@ -349,13 +349,6 @@ status
 error
 ```
 
-The most important metric for the thesis is usually:
-
-```text
-series_macro_f1
-```
-
-because the original task is classification of full time series, not classification of individual windows.
 
 A successful experiment has:
 
